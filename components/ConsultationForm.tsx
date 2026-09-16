@@ -66,38 +66,28 @@ export const ConsultationForm: React.FC = () => {
     fetchIp();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!isAgreed) {
       alert("개인정보 수집 및 이용에 동의해야 합니다.");
       return;
     }
-    setStatus("SUBMITTING");
     
     const form = e.currentTarget;
     const data = new FormData(form);
-    
-    try {
-      // 요청하신 데이터 수집용 Formspree 엔드포인트
-      const response = await fetch("https://formspree.io/f/mrealjpp", {
-        method: "POST",
-        body: data,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-      
-      if (response.ok) {
-        setStatus("SUCCESS");
-        form.reset();
-      } else {
-        setStatus("ERROR");
-        alert("전송 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-      }
-    } catch (error) {
-      setStatus("ERROR");
-      alert("네트워크 오류가 발생했습니다.");
-    }
+
+    // 낙관적 UI (Optimistic UI): 즉시 성공 처리 및 폼 초기화 (0.1초 만에 완료된 것처럼)
+    setStatus("SUCCESS");
+    form.reset();
+
+    // 백그라운드 전송 (keepalive: true 옵션으로 페이지 이탈 시에도 전송 보장)
+    fetch("https://inputhaven.com/api/v1/submit", {
+      method: "POST",
+      body: data,
+      keepalive: true
+    }).catch((error) => {
+      console.error("Background submission error:", error);
+    });
   };
 
   return (
@@ -150,6 +140,7 @@ export const ConsultationForm: React.FC = () => {
                   <form onSubmit={handleSubmit} className="space-y-2 md:space-y-3">
                   {/* IP 주소 및 메타데이터 */}
                   <input type="hidden" name="user_ip" value={ipAddress} />
+                  <input type="hidden" name="_form_id" value="c6397110de9deec24d35de40e8d1e38b" />
                   <input type="hidden" name="_subject" value="[신규 상담 신청] kt cloud 사이버 보안" />
 
                   <h3 className="text-lg font-bold mb-2 md:mb-3 flex items-center gap-2">
