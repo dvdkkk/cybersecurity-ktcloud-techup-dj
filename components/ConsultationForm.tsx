@@ -140,7 +140,7 @@ export const ConsultationForm: React.FC = () => {
                   <form onSubmit={handleSubmit} className="space-y-2 md:space-y-3">
                   {/* IP 주소 및 메타데이터 */}
                   <input type="hidden" name="user_ip" value={ipAddress} />
-                  <input type="hidden" name="_form_id" value="c6397110de9deec24d35de40e8d1e38b" />
+                  <input type="hidden" name="_form_id" value="8c00af638f5ad3f51b55767415e89087" />
                   <input type="hidden" name="_subject" value="[신규 상담 신청] kt cloud 사이버 보안" />
 
                   <h3 className="text-lg font-bold mb-2 md:mb-3 flex items-center gap-2">
